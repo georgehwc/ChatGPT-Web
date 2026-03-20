@@ -426,8 +426,6 @@ export const DEEPSEEK_SUMMARIZE_MODEL = "deepseek-chat";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "2021-09",
-  "gpt-4-turbo": "2023-12",
-  "gpt-4-turbo-2024-04-09": "2023-12",
   "gpt-4.1": "2024-06",
   "gpt-4.1-2025-04-14": "2024-06",
   "gpt-4.1-mini": "2024-06",
@@ -440,13 +438,6 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-5.4-mini-2026-03-17": "2025-03",
   "gpt-5.4-nano": "2025-03",
   "gpt-5.4-nano-2026-03-17": "2025-03",
-  "gpt-4o": "2023-10",
-  "gpt-4o-2024-08-06": "2023-10",
-  "gpt-4o-2024-11-20": "2023-10",
-  "gpt-4o-mini": "2023-10",
-  "gpt-4o-mini-2024-07-18": "2023-10",
-  "o3-mini-2025-01-31": "2023-10",
-  "o3-mini": "2023-10",
   "o3-pro": "2023-10",
   "claude-opus-4-6": "2025-05",
   "claude-sonnet-4-6": "2025-05",
@@ -473,15 +464,13 @@ export const DEFAULT_TTS_VOICES = [
 
 export const VISION_MODEL_REGEXES = [
   /vision/,
-  /gpt-4o/,
   /gpt-4\.1/,
   /gpt-5\.4/,
   /claude.*[34]/,
-  /gemini-2\.[05]/,
+  /gemini-2\.5/,
   /gemini-3/,
   /qwen-vl/,
   /qwen2-vl/,
-  /gpt-4-turbo(?!.*preview)/,
   /^dall-e-3$/,
   /glm-4v/,
   /vl/i,
@@ -490,11 +479,9 @@ export const VISION_MODEL_REGEXES = [
   /grok-4/i,
 ];
 
-export const EXCLUDE_VISION_MODEL_REGEXES = [/claude-3-5-haiku-20241022/];
+export const EXCLUDE_VISION_MODEL_REGEXES: RegExp[] = [];
 
 const openaiModels = [
-  "gpt-4-turbo",
-  "gpt-4-turbo-2024-04-09",
   "gpt-4.1",
   "gpt-4.1-2025-04-14",
   "gpt-4.1-mini",
@@ -507,22 +494,13 @@ const openaiModels = [
   "gpt-5.4-mini-2026-03-17",
   "gpt-5.4-nano",
   "gpt-5.4-nano-2026-03-17",
-  "gpt-4o",
-  "gpt-4o-2024-08-06",
-  "gpt-4o-2024-11-20",
-  "gpt-4o-audio-preview",
-  "gpt-4o-mini",
-  "gpt-4o-mini-2024-07-18",
   "dall-e-3",
-  "o3-mini",
-  "o3-mini-2025-01-31",
   "o3",
   "o3-pro",
   "o4-mini",
 ];
 
 const googleModels = [
-  "gemini-2.0-flash",
   "gemini-2.5-flash",
   "gemini-2.5-pro",
   "gemini-3-flash-preview",
@@ -531,12 +509,6 @@ const googleModels = [
 ];
 
 const anthropicModels = [
-  "claude-3-5-haiku-20241022",
-  "claude-3-5-haiku-latest",
-  "claude-3-5-sonnet-20241022",
-  "claude-3-5-sonnet-latest",
-  "claude-3-7-sonnet-20250219",
-  "claude-3-7-sonnet-latest",
   "claude-opus-4-1-20250514",
   "claude-opus-4-1",
   "claude-sonnet-4-5-20251022",
@@ -669,11 +641,8 @@ const siliconflowModels = [
 
 const ai302Models = [
   "deepseek-chat",
-  "gpt-4o",
   "llama3.3-70b",
   "deepseek-reasoner",
-  "gemini-2.0-flash",
-  "claude-3-7-sonnet-latest",
   "gpt-4.1",
   "gpt-4.1-mini",
   "gpt-5.4",
@@ -716,7 +685,6 @@ const CATEGORY_RULES: Array<[RegExp, ModelCategory]> = [
   [/^o3/, "Reasoning"],
   [/^o4-mini/, "Reasoning"],
   [/deepseek-reasoner/, "Reasoning"],
-  [/^claude-3-7-sonnet/, "Reasoning"],
   [/^gemini-2\.5-pro/, "Reasoning"],
   [/^gemini-3\.1-pro/, "Reasoning"],
   [/^grok-4(?!.*fast-non-reasoning)/, "Reasoning"],
@@ -728,13 +696,11 @@ const CATEGORY_RULES: Array<[RegExp, ModelCategory]> = [
   [/hunyuan-code/, "Code"],
   [/grok-code/, "Code"],
   // Fast/Lite
-  [/4o-mini/, "Fast/Lite"],
   [/4\.1-mini/, "Fast/Lite"],
   [/4\.1-nano/, "Fast/Lite"],
   [/gpt-5\.4-mini/, "Fast/Lite"],
   [/gpt-5\.4-nano/, "Fast/Lite"],
   [/claude.*haiku/, "Fast/Lite"],
-  [/claude-3-5-haiku/, "Fast/Lite"],
   [/gemini.*flash/, "Fast/Lite"],
   [/ernie-lite/, "Fast/Lite"],
   [/ernie-tiny/, "Fast/Lite"],
