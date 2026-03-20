@@ -61,6 +61,7 @@ export function collectModelTable(
       sorted: number;
       provider?: LLMModel["provider"]; // Marked as optional
       isDefault?: boolean;
+      category?: string;
     }
   > = {};
 

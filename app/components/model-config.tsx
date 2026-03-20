@@ -16,7 +16,7 @@ export function ModelConfigList(props: {
   const allModels = useAllModels();
   const groupModels = groupBy(
     allModels.filter((v) => v.available),
-    "provider.providerName",
+    (m) => m.category || "Chat",
   );
   const value = `${props.modelConfig.model}@${props.modelConfig?.providerName}`;
   const compressModelValue = `${props.modelConfig.compressModel}@${props.modelConfig?.compressProviderName}`;
@@ -38,11 +38,11 @@ export function ModelConfigList(props: {
             });
           }}
         >
-          {Object.keys(groupModels).map((providerName, index) => (
-            <optgroup label={providerName} key={index}>
-              {groupModels[providerName].map((v, i) => (
+          {Object.keys(groupModels).map((category, index) => (
+            <optgroup label={category} key={index}>
+              {groupModels[category].map((v, i) => (
                 <option value={`${v.name}@${v.provider?.providerName}`} key={i}>
-                  {v.displayName}
+                  {v.displayName}{v.provider?.providerName ? ` (${v.provider.providerName})` : ""}
                 </option>
               ))}
             </optgroup>
@@ -259,13 +259,15 @@ export function ModelConfigList(props: {
             });
           }}
         >
-          {allModels
-            .filter((v) => v.available)
-            .map((v, i) => (
-              <option value={`${v.name}@${v.provider?.providerName}`} key={i}>
-                {v.displayName}({v.provider?.providerName})
-              </option>
-            ))}
+          {Object.keys(groupModels).map((category, index) => (
+            <optgroup label={category} key={index}>
+              {groupModels[category].map((v, i) => (
+                <option value={`${v.name}@${v.provider?.providerName}`} key={i}>
+                  {v.displayName}{v.provider?.providerName ? ` (${v.provider.providerName})` : ""}
+                </option>
+              ))}
+            </optgroup>
+          ))}
         </Select>
       </ListItem>
     </>

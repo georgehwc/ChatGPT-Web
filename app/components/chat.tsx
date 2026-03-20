@@ -531,7 +531,21 @@ export function ChatActions(props: {
     session.mask.modelConfig?.providerName || ServiceProvider.OpenAI;
   const allModels = useAllModels();
   const models = useMemo(() => {
-    const filteredModels = allModels.filter((m) => m.available);
+    const categoryOrder: Record<string, number> = {
+      Reasoning: 0,
+      Chat: 1,
+      "Fast/Lite": 2,
+      Code: 3,
+      "Image Generation": 4,
+      Specialized: 5,
+    };
+    const filteredModels = allModels
+      .filter((m) => m.available)
+      .sort(
+        (a, b) =>
+          (categoryOrder[a.category || "Chat"] ?? 99) -
+          (categoryOrder[b.category || "Chat"] ?? 99),
+      );
     const defaultModel = filteredModels.find((m) => m.isDefault);
 
     if (defaultModel) {
@@ -688,6 +702,7 @@ export function ChatActions(props: {
                   ? " (" + m?.provider?.providerName + ")"
                   : ""
               }`,
+              subTitle: m.category || "Chat",
               value: `${m.name}@${m?.provider?.providerName}`,
             }))}
             onClose={() => setShowModelSelector(false)}

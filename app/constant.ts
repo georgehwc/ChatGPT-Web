@@ -707,12 +707,87 @@ const ai302Models = [
   "gemini-2.5-pro",
 ];
 
+// Model category constants
+export const MODEL_CATEGORIES = {
+  Reasoning: "Reasoning",
+  Chat: "Chat",
+  "Fast/Lite": "Fast/Lite",
+  "Image Generation": "Image Generation",
+  Code: "Code",
+  Specialized: "Specialized",
+} as const;
+
+export type ModelCategory =
+  (typeof MODEL_CATEGORIES)[keyof typeof MODEL_CATEGORIES];
+
+// Maps model name patterns to categories. First match wins. Unmatched defaults to "Chat".
+const CATEGORY_RULES: Array<[RegExp, ModelCategory]> = [
+  // Image Generation
+  [/^dall-e/, "Image Generation"],
+  [/^cogview/, "Image Generation"],
+  // Reasoning
+  [/^o1/, "Reasoning"],
+  [/^o3/, "Reasoning"],
+  [/^o4-mini/, "Reasoning"],
+  [/deepseek-reasoner/, "Reasoning"],
+  [/^claude-3-7-sonnet/, "Reasoning"],
+  [/^gemini-2\.5-pro/, "Reasoning"],
+  [/^grok-3(?!.*fast-non-reasoning)/, "Reasoning"],
+  [/^grok-4(?!.*fast-non-reasoning)/, "Reasoning"],
+  [/^grok-4-fast-reasoning/, "Reasoning"],
+  [/kimi-thinking/, "Reasoning"],
+  [/DeepSeek-R1/, "Reasoning"],
+  // Code
+  [/deepseek-coder/, "Code"],
+  [/hunyuan-code/, "Code"],
+  [/grok-code/, "Code"],
+  // Fast/Lite
+  [/4o-mini/, "Fast/Lite"],
+  [/4\.1-mini/, "Fast/Lite"],
+  [/4\.1-nano/, "Fast/Lite"],
+  [/gpt-5-mini/, "Fast/Lite"],
+  [/gpt-5-nano/, "Fast/Lite"],
+  [/claude.*haiku/, "Fast/Lite"],
+  [/claude-3-5-haiku/, "Fast/Lite"],
+  [/gemini.*flash/, "Fast/Lite"],
+  [/ernie-lite/, "Fast/Lite"],
+  [/ernie-tiny/, "Fast/Lite"],
+  [/ernie-speed/, "Fast/Lite"],
+  [/hunyuan-lite/, "Fast/Lite"],
+  [/Doubao-lite/, "Fast/Lite"],
+  [/glm-4-flash/, "Fast/Lite"],
+  [/glm-4-air/, "Fast/Lite"],
+  [/grok-.*mini/, "Fast/Lite"],
+  [/grok-4-fast-non-reasoning/, "Fast/Lite"],
+  [/Qwen2\.5-7B/, "Fast/Lite"],
+  [/DeepSeek-R1-Distill.*(?:1\.5B|7B|8B)/, "Fast/Lite"],
+  // Specialized
+  [/audio/, "Specialized"],
+  [/tts/, "Specialized"],
+  [/realtime/, "Specialized"],
+  [/hunyuan-role/, "Specialized"],
+  [/hunyuan-functioncall/, "Specialized"],
+  [/hunyuan-vision/, "Specialized"],
+  [/vision-preview/, "Specialized"],
+  [/qwen-vl/, "Specialized"],
+  [/qwen-omni/, "Specialized"],
+  [/glm-4v/, "Specialized"],
+];
+
+function getModelCategory(name: string): ModelCategory {
+  for (const [pattern, category] of CATEGORY_RULES) {
+    if (pattern.test(name)) return category;
+  }
+  return "Chat";
+}
+
 let seq = 1000; // 内置的模型序号生成器从1000开始
 export const DEFAULT_MODELS = [
   ...openaiModels.map((name) => ({
     name,
     available: true,
     sorted: seq++, // Global sequence sort(index)
+    category: getModelCategory(name),
     provider: {
       id: "openai",
       providerName: "OpenAI",
@@ -724,6 +799,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "azure",
       providerName: "Azure",
@@ -735,6 +811,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "google",
       providerName: "Google",
@@ -746,6 +823,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "anthropic",
       providerName: "Anthropic",
@@ -757,6 +835,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "baidu",
       providerName: "Baidu",
@@ -768,6 +847,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "bytedance",
       providerName: "ByteDance",
@@ -779,6 +859,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "alibaba",
       providerName: "Alibaba",
@@ -790,6 +871,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "tencent",
       providerName: "Tencent",
@@ -801,6 +883,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "moonshot",
       providerName: "Moonshot",
@@ -812,6 +895,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "iflytek",
       providerName: "Iflytek",
@@ -823,6 +907,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "xai",
       providerName: "XAI",
@@ -834,6 +919,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "chatglm",
       providerName: "ChatGLM",
@@ -845,6 +931,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "deepseek",
       providerName: "DeepSeek",
@@ -856,6 +943,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "siliconflow",
       providerName: "SiliconFlow",
@@ -867,6 +955,7 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     sorted: seq++,
+    category: getModelCategory(name),
     provider: {
       id: "ai302",
       providerName: "302.AI",
