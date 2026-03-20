@@ -3,7 +3,7 @@ import { isModelNotavailableInServer } from "../app/utils/model";
 describe("isModelNotavailableInServer", () => {
   test("test model will return false, which means the model is available", () => {
     const customModels = "";
-    const modelName = "gpt-4";
+    const modelName = "gpt-4.1";
     const providerNames = "OpenAI";
     const result = isModelNotavailableInServer(
       customModels,
@@ -14,8 +14,8 @@ describe("isModelNotavailableInServer", () => {
   });
 
   test("test model will return true when model is not available in custom models", () => {
-    const customModels = "-all,gpt-4o-mini";
-    const modelName = "gpt-4";
+    const customModels = "-all,gpt-4.1-mini";
+    const modelName = "gpt-4.1";
     const providerNames = "OpenAI";
     const result = isModelNotavailableInServer(
       customModels,
@@ -27,23 +27,23 @@ describe("isModelNotavailableInServer", () => {
 
   test("should respect DISABLE_GPT4 setting", () => {
     process.env.DISABLE_GPT4 = "1";
-    const result = isModelNotavailableInServer("", "gpt-4", "OpenAI");
+    const result = isModelNotavailableInServer("", "gpt-4.1", "OpenAI");
     expect(result).toBe(true);
   });
 
   test("should handle empty provider names", () => {
-    const result = isModelNotavailableInServer("-all,gpt-4", "gpt-4", "");
+    const result = isModelNotavailableInServer("-all,gpt-4.1", "gpt-4.1", "");
     expect(result).toBe(true);
   });
 
   test("should be case insensitive for model names", () => {
-    const result = isModelNotavailableInServer("-all,GPT-4", "gpt-4", "OpenAI");
+    const result = isModelNotavailableInServer("-all,GPT-4.1", "gpt-4.1", "OpenAI");
     expect(result).toBe(true);
   });
 
   test("support passing multiple providers, model unavailable on one of the providers will return true", () => {
-    const customModels = "-all,gpt-4@google";
-    const modelName = "gpt-4";
+    const customModels = "-all,gpt-4.1@google";
+    const modelName = "gpt-4.1";
     const providerNames = ["OpenAI", "Azure"];
     const result = isModelNotavailableInServer(
       customModels,

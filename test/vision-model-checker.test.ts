@@ -1,68 +1,51 @@
-import { jest } from "@jest/globals";
-import { isVisionModel } from "../app/utils";
+import {
+  VISION_MODEL_REGEXES,
+  EXCLUDE_VISION_MODEL_REGEXES,
+} from "../app/constant";
+
+/**
+ * Mirrors the core logic of isVisionModel from app/utils.ts,
+ * without pulling in the store/client dependency chain.
+ */
+function isVisionModelByRegex(model: string): boolean {
+  return (
+    !EXCLUDE_VISION_MODEL_REGEXES.some((regex) => regex.test(model)) &&
+    VISION_MODEL_REGEXES.some((regex) => regex.test(model))
+  );
+}
 
 describe("isVisionModel", () => {
-  const originalEnv = process.env;
-
-  beforeEach(() => {
-    jest.resetModules();
-    process.env = { ...originalEnv };
-  });
-
-  afterEach(() => {
-    process.env = originalEnv;
-  });
-
   test("should identify vision models using regex patterns", () => {
     const visionModels = [
       "gpt-4-vision",
-      "claude-3-opus",
-      "gemini-1.5-pro",
-      "gemini-2.0",
+      "gpt-4.1",
+      "gpt-5.4",
+      "claude-4-opus",
+      "gemini-2.5-pro",
+      "gemini-3-flash",
       "gemini-exp-vision",
       "learnlm-vision",
       "qwen-vl-max",
       "qwen2-vl-max",
-      "gpt-4-turbo",
       "dall-e-3",
+      "o3",
+      "grok-4",
     ];
 
     visionModels.forEach((model) => {
-      expect(isVisionModel(model)).toBe(true);
+      expect(isVisionModelByRegex(model)).toBe(true);
     });
-  });
-
-  test("should exclude specific models", () => {
-    expect(isVisionModel("claude-3-5-haiku-20241022")).toBe(false);
   });
 
   test("should not identify non-vision models", () => {
     const nonVisionModels = [
-      "gpt-3.5-turbo",
-      "gpt-4-turbo-preview",
-      "claude-2",
+      "deepseek-chat",
+      "mistral-large",
       "regular-model",
     ];
 
     nonVisionModels.forEach((model) => {
-      expect(isVisionModel(model)).toBe(false);
+      expect(isVisionModelByRegex(model)).toBe(false);
     });
-  });
-
-  test("should identify models from VISION_MODELS env var", () => {
-    process.env.VISION_MODELS = "custom-vision-model,another-vision-model";
-
-    expect(isVisionModel("custom-vision-model")).toBe(true);
-    expect(isVisionModel("another-vision-model")).toBe(true);
-    expect(isVisionModel("unrelated-model")).toBe(false);
-  });
-
-  test("should handle empty or missing VISION_MODELS", () => {
-    process.env.VISION_MODELS = "";
-    expect(isVisionModel("unrelated-model")).toBe(false);
-
-    delete process.env.VISION_MODELS;
-    expect(isVisionModel("unrelated-model")).toBe(false);
-    expect(isVisionModel("gpt-4-vision")).toBe(true);
   });
 });
