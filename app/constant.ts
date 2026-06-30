@@ -466,7 +466,9 @@ export const VISION_MODEL_REGEXES = [
   /vision/,
   /gpt-4\.1/,
   /gpt-5\.4/,
+  /gpt-5\.5/,
   /claude.*[34]/,
+  /claude-fable/,
   /gemini-2\.5/,
   /gemini-3/,
   /qwen-vl/,
@@ -494,6 +496,8 @@ const openaiModels = [
   "gpt-5.4-mini-2026-03-17",
   "gpt-5.4-nano",
   "gpt-5.4-nano-2026-03-17",
+  "gpt-5.5",
+  "gpt-5.5-pro",
   "dall-e-3",
   "o3",
   "o3-pro",
@@ -506,6 +510,7 @@ const googleModels = [
   "gemini-3-flash-preview",
   "gemini-3.1-pro-preview",
   "gemini-3.1-flash-lite",
+  "gemini-3.5-flash",
 ];
 
 const anthropicModels = [
@@ -519,6 +524,9 @@ const anthropicModels = [
   "claude-opus-4-6",
   "claude-sonnet-4-6-20260217",
   "claude-sonnet-4-6",
+  "claude-opus-4-7",
+  "claude-opus-4-8",
+  "claude-fable-5",
   "claude-sonnet-4-latest",
   "claude-opus-4-latest",
 ];
@@ -590,7 +598,12 @@ const iflytekModels = [
   "4.0Ultra",
 ];
 
-const deepseekModels = ["deepseek-chat", "deepseek-reasoner"];
+const deepseekModels = [
+  "deepseek-chat",
+  "deepseek-reasoner",
+  "deepseek-v4-flash",
+  "deepseek-v4-pro",
+];
 
 const xAIModes = [
   "grok-4",
@@ -600,6 +613,10 @@ const xAIModes = [
   "grok-4-1-fast-reasoning",
   "grok-4-1-fast-non-reasoning",
   "grok-code-fast-1",
+  "grok-4.3",
+  "grok-4.20-0309-reasoning",
+  "grok-4.20-0309-non-reasoning",
+  "grok-4.20-multi-agent-0309",
 ];
 
 const chatglmModels = [
@@ -687,6 +704,7 @@ const CATEGORY_RULES: Array<[RegExp, ModelCategory]> = [
   [/deepseek-reasoner/, "Reasoning"],
   [/^gemini-2\.5-pro/, "Reasoning"],
   [/^gemini-3\.1-pro/, "Reasoning"],
+  [/^grok-4\.20.*non-reasoning/, "Chat"],
   [/^grok-4(?!.*fast-non-reasoning)/, "Reasoning"],
   [/^grok-4-fast-reasoning/, "Reasoning"],
   [/^grok-4-1-fast-reasoning/, "Reasoning"],
@@ -710,6 +728,7 @@ const CATEGORY_RULES: Array<[RegExp, ModelCategory]> = [
   [/glm-4-flash/, "Fast/Lite"],
   [/glm-4-air/, "Fast/Lite"],
   [/gemini-3\.1-flash-lite/, "Fast/Lite"],
+  [/deepseek-v4-flash/, "Fast/Lite"],
   [/grok-4-fast-non-reasoning/, "Fast/Lite"],
   [/grok-4-1-fast-non-reasoning/, "Fast/Lite"],
   [/Qwen2\.5-7B/, "Fast/Lite"],
