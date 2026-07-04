@@ -1,7 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { LLMModelProvider } from "../client/api";
+import { RECOMMENDED_MODELS } from "../constant";
 import { Avatar } from "./emoji";
 import styles from "./model-selector.module.scss";
+
+// Sentinel provider name for the curated "Recommended" section in the sidebar.
+const RECOMMENDED_PROVIDER = "Recommended";
 
 type ModelItem = {
   available: boolean;
@@ -36,11 +40,39 @@ export function ModelSelector(props: ModelSelectorProps) {
     return Array.from(map.values()).sort((a, b) => a.sorted - b.sorted);
   }, [models]);
 
-  // Determine initially selected provider from current model
+  // Curated "Recommended" models, in RECOMMENDED_MODELS order, matched by name
+  // against the available models (first available match per name wins).
+  const recommendedModels = useMemo(() => {
+    const seen = new Set<string>();
+    const result: ModelItem[] = [];
+    for (const name of RECOMMENDED_MODELS) {
+      const m = models.find((mm) => mm.name === name);
+      if (m && !seen.has(m.name)) {
+        seen.add(m.name);
+        result.push(m);
+      }
+    }
+    return result;
+  }, [models]);
+
+  const hasRecommended = recommendedModels.length > 0;
+
+  // Provider sidebar entries, with "Recommended" pinned to the top when present.
+  const sidebarProviders = useMemo(
+    () =>
+      hasRecommended
+        ? [{ name: RECOMMENDED_PROVIDER, sorted: -1 }, ...providers]
+        : providers,
+    [hasRecommended, providers],
+  );
+
+  // Determine initially selected provider: open on "Recommended" when available,
+  // otherwise fall back to the current model's provider.
   const initialProvider = useMemo(() => {
+    if (hasRecommended) return RECOMMENDED_PROVIDER;
     const [, providerName] = currentValue.split(/@(?!.*@)/);
     return providerName || providers[0]?.name || "";
-  }, [currentValue, providers]);
+  }, [hasRecommended, currentValue, providers]);
 
   const [selectedProvider, setSelectedProvider] = useState(initialProvider);
 
@@ -62,6 +94,12 @@ export function ModelSelector(props: ModelSelectorProps) {
       return pName === selectedProvider;
     });
   }, [models, selectedProvider, searchQuery]);
+
+  // The list shown in the right panel (Recommended is a curated cross-provider set).
+  const visibleModels =
+    !searchQuery.trim() && selectedProvider === RECOMMENDED_PROVIDER
+      ? recommendedModels
+      : filteredModels;
 
   // Provider counts for search results
   const searchProviderCounts = useMemo(() => {
@@ -108,15 +146,26 @@ export function ModelSelector(props: ModelSelectorProps) {
           {/* Provider list (left panel) */}
           {!searchQuery.trim() && (
             <div className={styles["provider-list"]}>
-              {providers.map((p) => (
+              {sidebarProviders.map((p) => (
                 <div
                   key={p.name}
                   className={`${styles["provider-item"]} ${
                     selectedProvider === p.name ? styles["provider-active"] : ""
+                  } ${
+                    p.name === RECOMMENDED_PROVIDER
+                      ? styles["provider-recommended"]
+                      : ""
                   }`}
                   onClick={() => setSelectedProvider(p.name)}
                 >
-                  {p.name}
+                  {p.name === RECOMMENDED_PROVIDER ? (
+                    <>
+                      <span className={styles["rec-star"]}>★</span>
+                      Recommended
+                    </>
+                  ) : (
+                    p.name
+                  )}
                 </div>
               ))}
             </div>
@@ -156,8 +205,8 @@ export function ModelSelector(props: ModelSelectorProps) {
                 <div className={styles["no-results"]}>No models found</div>
               )
             ) : (
-              // Normal provider view
-              filteredModels.map((m) => (
+              // Normal provider view (or the curated Recommended set)
+              visibleModels.map((m) => (
                 <ModelItemRow
                   key={`${m.name}@${m.provider?.providerName}`}
                   model={m}

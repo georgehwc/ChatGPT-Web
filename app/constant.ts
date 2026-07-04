@@ -680,6 +680,19 @@ const ai302Models = [
   "grok-4-1-fast-reasoning",
 ];
 
+// Curated list of current, ready-to-use models surfaced in the "Recommended"
+// section at the top of the model selector's provider sidebar. Matched by model
+// name against the available models; the first available match wins. Ordered
+// GPT-first. Edit this list to change what appears under "Recommended".
+export const RECOMMENDED_MODELS = [
+  "gpt-5.5",
+  "gpt-5.4-mini",
+  "claude-opus-4-8",
+  "gemini-3.5-flash",
+  "grok-4.3",
+  "deepseek-v4-pro",
+];
+
 // Model category constants
 export const MODEL_CATEGORIES = {
   Reasoning: "Reasoning",

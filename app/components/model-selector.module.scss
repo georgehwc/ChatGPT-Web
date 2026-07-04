@@ -56,8 +56,8 @@
 }
 
 .provider-list {
-  width: 140px;
-  min-width: 140px;
+  width: 168px;
+  min-width: 168px;
   border-right: 1px solid var(--border-in-light);
   overflow-y: auto;
   padding: 8px 0;
@@ -84,6 +84,19 @@
   color: var(--primary);
   font-weight: 600;
   border-right: 2px solid var(--primary);
+}
+
+.provider-recommended {
+  color: var(--primary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-in-light);
+  margin-bottom: 4px;
+  padding: 10px 12px 12px;
+}
+
+.rec-star {
+  font-size: 11px;
+  margin-right: 4px;
 }
 
 .model-list {
@@ -173,8 +186,8 @@
   }
 
   .provider-list {
-    width: 100px;
-    min-width: 100px;
+    width: 124px;
+    min-width: 124px;
   }
 
   .provider-item {
